@@ -1,0 +1,49 @@
+def logical_equivalence(formula1, formula2, domain_of_discourse):
+  """Returns True if the two formulas are logically equivalent, and False otherwise.
+
+  Args:
+    formula1: A LogicalFormula object.
+    formula2: A LogicalFormula object.
+    domain_of_discourse: A set of values for the variables in the formulas.
+
+  Returns:
+    True if the two formulas are logically equivalent, and False otherwise.
+  """
+
+  # If the two formulas are the same, then they are logically equivalent.
+  if formula1 == formula2:
+    return True
+
+  # If the two formulas have different types, then they are not logically equivalent.
+  if type(formula1) != type(formula2):
+    return False
+
+  # If the two formulas are both LogicalImplication objects, then they are logically equivalent if and only if
+  # the antecedent of the first formula is logically equivalent to the consequent of the second formula,
+  # and the consequent of the first formula is logically equivalent to the antecedent of the second formula.
+  if isinstance(formula1, LogicalImplication):
+    return logical_equivalence(formula1.antecedent, formula2.consequent, domain_of_discourse) and \
+           logical_equivalence(formula1.consequent, formula2.antecedent, domain_of_discourse)
+
+  # If the two formulas are both LogicalUniversalQuantifier objects, then they are logically equivalent if and only if
+  # the quantifier body of the first formula is logically equivalent to the quantifier body of the second formula.
+  if isinstance(formula1, LogicalUniversalQuantifier):
+    return logical_equivalence(formula1.quantifier_body, formula2.quantifier_body, domain_of_discourse)
+
+  # If the two formulas are both LogicalExistentialQuantifier objects, then they are logically equivalent if and only if
+  # the quantifier body of the first formula is logically equivalent to the quantifier body of the second formula.
+  if isinstance(formula1, LogicalExistentialQuantifier):
+    return logical_equivalence(formula1.quantifier_body, formula2.quantifier_body, domain_of_discourse)
+
+  # If the two formulas are both LogicalAxiom objects, then they are logically equivalent if and only if
+  # the two axioms are the same.
+  if isinstance(formula1, LogicalAxiom):
+    return formula1 == formula2
+
+  # If the two formulas are both LogicalContradiction objects, then they are logically equivalent if and only if
+  # the two contradictions are the same.
+  if isinstance(formula1, LogicalContradiction):
+    return formula1 == formula2
+
+  # Otherwise, the two formulas are not logically equivalent.
+  return False
